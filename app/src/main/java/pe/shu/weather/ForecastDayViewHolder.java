@@ -3,8 +3,10 @@ package pe.shu.weather;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import pe.shu.weather.model.WeatherIcon;
 import pe.shu.weather.model.forecast.ForecastDay;
 
 /**
@@ -20,6 +22,8 @@ public class ForecastDayViewHolder extends RecyclerView.ViewHolder {
     private TextView mHighTextView;
     private TextView mLowTextView;
 
+    private ImageView mWeatherImage;
+
     private String mTempFormatString;
 
     public ForecastDayViewHolder(View itemView) {
@@ -30,6 +34,8 @@ public class ForecastDayViewHolder extends RecyclerView.ViewHolder {
         mHighTextView = (TextView)itemView.findViewById(R.id.forecast_day_high);
         mLowTextView = (TextView)itemView.findViewById(R.id.forecast_day_low);
 
+        mWeatherImage = (ImageView)itemView.findViewById(R.id.weather_image);
+
         mTempFormatString = itemView.getContext().getString(R.string.temperature);
     }
 
@@ -38,5 +44,7 @@ public class ForecastDayViewHolder extends RecyclerView.ViewHolder {
         mConditionTextView.setText(forecastDay.getCondition());
         mHighTextView.setText(String.format(mTempFormatString, forecastDay.getHigh()));
         mLowTextView.setText(String.format(mTempFormatString, forecastDay.getLow()));
+
+        mWeatherImage.setImageResource(WeatherIcon.getIconFromCode(forecastDay.getCode()));
     }
 }

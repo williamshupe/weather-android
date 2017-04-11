@@ -10,6 +10,8 @@ import org.joda.time.format.DateTimeFormat;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import pe.shu.weather.model.Forecast;
 import pe.shu.weather.model.forecast.Astronomy;
@@ -298,8 +300,14 @@ public class ResponseAdapter extends TypeAdapter<Forecast> {
                 if (name.equals("code")) {
                     condition.setCode(Integer.parseInt(in.nextString()));
                 } else if (name.equals("date")) {
-                    DateTime date = DateTimeFormat.forPattern("EEE, dd MMM yyyy hh:mm a zzz").parseDateTime(in.nextString());
-                    condition.setDate(date);
+                    // Remove timezone to fix some date parsing errors (hacky I know...)
+                    Pattern pattern = Pattern.compile("((.*)(AM|PM))");
+                    Matcher matcher = pattern.matcher(in.nextString());
+                    if (matcher.find()) {
+                        String dateString = matcher.group(1);
+                        DateTime date = DateTimeFormat.forPattern("EEE, dd MMM yyyy hh:mm a").parseDateTime(dateString);
+                        condition.setDate(date);
+                    }
                 } else if (name.equals("temp")) {
                     condition.setTemp(Integer.parseInt(in.nextString()));
                 } else if (name.equals("text")) {

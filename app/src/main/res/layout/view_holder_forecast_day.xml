@@ -45,6 +45,7 @@
         app:layout_constraintTop_toBottomOf="@+id/forecast_day_high"/>
 
     <ImageView
+        android:id="@+id/weather_image"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:adjustViewBounds="false"
