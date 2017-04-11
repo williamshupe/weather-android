@@ -45,7 +45,14 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         forecastRecycler.setLayoutManager(new LinearLayoutManager(MainActivity.this));
         forecastRecycler.addItemDecoration(new DividerItemDecoration(MainActivity.this, LinearLayoutManager.VERTICAL));
 
-        getForecast("South Jordan");
+        Forecast forecast = ForecastService.getInstance().getForecast();
+        if (forecast != null) {
+            mAdapter.setForecast(forecast);
+            mAdapter.setLoading(false);
+            getSupportActionBar().setTitle(String.format(getString(R.string.location_title), forecast.getLocation().getCity(), forecast.getLocation().getRegion()));
+        } else {
+            getForecast("South Jordan");
+        }
     }
 
     @Override
