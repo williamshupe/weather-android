@@ -58,6 +58,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/view_half_margin"
         android:layout_marginLeft="0dp"
+        android:text="feels like 59"
         app:layout_constraintTop_toBottomOf="@+id/forecast_detail_current_temp"
         app:layout_constraintLeft_toLeftOf="@+id/forecast_detail_current_temp"/>
     <ImageView
@@ -89,6 +90,7 @@
         app:layout_constraintTop_toTopOf="@+id/forecast_detail_feels_like"
         app:layout_constraintLeft_toLeftOf="@+id/guideline"
         app:layout_constraintRight_toRightOf="parent"
+        android:text="cloudy"
         />
 
     <android.support.constraint.Guideline
@@ -98,5 +100,45 @@
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.5"
         />
+
+    <TextView
+        android:id="@+id/forecast_detail_sunrise"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/sunrise"
+        android:layout_marginTop="@dimen/medium_margin"
+        app:layout_constraintTop_toBottomOf="@+id/forecast_detail_feels_like"
+        android:layout_marginLeft="0dp"
+        app:layout_constraintLeft_toLeftOf="@+id/forecast_detail_feels_like"
+        />
+    <TextView
+        android:id="@+id/forecast_detail_sunset"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/sunset"
+        android:layout_marginTop="@dimen/view_half_margin"
+        app:layout_constraintTop_toBottomOf="@+id/forecast_detail_sunrise"
+        android:layout_marginLeft="0dp"
+        app:layout_constraintLeft_toLeftOf="@+id/forecast_detail_sunrise"
+        />
+    <TextView
+        android:id="@+id/forecast_detail_wind"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/wind_display"
+        app:layout_constraintTop_toTopOf="@+id/forecast_detail_sunset"
+        android:layout_marginTop="0dp"
+        android:layout_marginLeft="@dimen/view_margin"
+        app:layout_constraintLeft_toLeftOf="@+id/guideline"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/wind"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/forecast_detail_wind"
+        android:layout_marginLeft="0dp"
+        app:layout_constraintLeft_toLeftOf="@+id/forecast_detail_wind"/>
+
 
 </android.support.constraint.ConstraintLayout>

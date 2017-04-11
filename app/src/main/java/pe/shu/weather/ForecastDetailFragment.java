@@ -65,6 +65,23 @@ public class ForecastDetailFragment extends Fragment {
 
         ((ImageView)view.findViewById(R.id.forecast_detail_image)).setImageResource(WeatherIcon.getIconFromCode(mForecast.getCondition().getCode()));
 
+        ((TextView)view.findViewById(R.id.forecast_detail_sunrise)).setText(
+                String.format(getString(R.string.sunrise), mForecast.getAstronomy().getSunrise().toString("h:mm a"))
+        );
+
+        ((TextView)view.findViewById(R.id.forecast_detail_sunset)).setText(
+                String.format(getString(R.string.sunset), mForecast.getAstronomy().getSunset().toString("h:mm a"))
+        );
+
+        ((TextView)view.findViewById(R.id.forecast_detail_wind)).setText(
+                String.format(
+                        getString(R.string.wind_display),
+                        mForecast.getWind().getSpeed(),
+                        mForecast.getUnits().getSpeedUnits(),
+                        mForecast.getWind().getWindDirection()
+                )
+        );
+
         return view;
     }
 }

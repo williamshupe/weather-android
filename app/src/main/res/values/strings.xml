@@ -11,4 +11,8 @@
     <string name="loading">Loading&#8230;</string>
     <string name="retry">Retry</string>
     <string name="current_conditions">Current Conditions</string>
+    <string name="sunrise">Sunrise: %s</string>
+    <string name="sunset">Sunset: %s</string>
+    <string name="wind_display">%1$d %2$s %3$s</string>
+    <string name="wind">Wind</string>
 </resources>
