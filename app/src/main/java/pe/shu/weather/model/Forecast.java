@@ -6,6 +6,7 @@ import pe.shu.weather.model.forecast.Astronomy;
 import pe.shu.weather.model.forecast.Atmosphere;
 import pe.shu.weather.model.forecast.Condition;
 import pe.shu.weather.model.forecast.ForecastDay;
+import pe.shu.weather.model.forecast.Location;
 import pe.shu.weather.model.forecast.Units;
 import pe.shu.weather.model.forecast.Wind;
 
@@ -20,6 +21,7 @@ public class Forecast {
     private Atmosphere mAtmosphere;
     private Astronomy mAstronomy;
     private Condition mCondition;
+    private Location mLocation;
     private List<ForecastDay> mForecast;
 
     public Units getUnits() {
@@ -60,6 +62,14 @@ public class Forecast {
 
     public void setCondition(Condition condition) {
         mCondition = condition;
+    }
+
+    public Location getLocation() {
+        return mLocation;
+    }
+
+    public void setLocation(Location location) {
+        mLocation = location;
     }
 
     public List<ForecastDay> getForecast() {

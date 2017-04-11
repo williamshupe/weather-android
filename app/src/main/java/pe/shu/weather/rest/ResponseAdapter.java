@@ -16,6 +16,7 @@ import pe.shu.weather.model.forecast.Astronomy;
 import pe.shu.weather.model.forecast.Atmosphere;
 import pe.shu.weather.model.forecast.Condition;
 import pe.shu.weather.model.forecast.ForecastDay;
+import pe.shu.weather.model.forecast.Location;
 import pe.shu.weather.model.forecast.Units;
 import pe.shu.weather.model.forecast.Wind;
 
@@ -110,6 +111,8 @@ public class ResponseAdapter extends TypeAdapter<Forecast> {
                     forecast.setAtmosphere(readAtmosphere(in));
                 } else if (name.equals("astronomy")) {
                     forecast.setAstronomy(readAstronomy(in));
+                } else if (name.equals("location")) {
+                    forecast.setLocation(readLocation(in));
                 } else {
                     in.skipValue();
                 }
@@ -119,6 +122,32 @@ public class ResponseAdapter extends TypeAdapter<Forecast> {
         }
 
         return forecast;
+    }
+
+    private Location readLocation(JsonReader in) throws IOException {
+        Location location = null;
+
+        if (in.peek() != JsonToken.NULL) {
+            in.beginObject();
+
+            location = new Location();
+
+            while (in.hasNext()) {
+                String name = in.nextName();
+
+                if (name.equals("city")) {
+                    location.setCity(in.nextString());
+                } else if (name.equals("region")) {
+                    location.setRegion(in.nextString());
+                } else {
+                    in.skipValue();
+                }
+            }
+
+            in.endObject();
+        }
+
+        return location;
     }
 
     private Units readUnits(JsonReader in) throws IOException {
