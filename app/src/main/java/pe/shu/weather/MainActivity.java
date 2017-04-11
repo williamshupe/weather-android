@@ -1,7 +1,11 @@
 package pe.shu.weather;
 
+import android.graphics.drawable.GradientDrawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 
@@ -14,17 +18,22 @@ import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
 
+    private ForecastRecyclerAdapter mAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        findViewById(R.id.forecast_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                getForecast();
-            }
-        });
+        RecyclerView forecastRecycler = (RecyclerView)findViewById(R.id.forecast_recycler);
+
+        mAdapter = new ForecastRecyclerAdapter();
+        mAdapter.setLoading(true);
+        forecastRecycler.setAdapter(mAdapter);
+        forecastRecycler.setLayoutManager(new LinearLayoutManager(MainActivity.this));
+        forecastRecycler.addItemDecoration(new DividerItemDecoration(MainActivity.this, LinearLayoutManager.VERTICAL));
+
+        getForecast();
     }
 
     private void getForecast() {
@@ -35,7 +44,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<Forecast> call, Response<Forecast> response) {
                 Forecast forecast = response.body();
-                Log.d("Weather app", "Got this many results: " + forecast.getForecast().size());
+                mAdapter.setForecast(forecast);
+                mAdapter.setLoading(false);
             }
 
             @Override
