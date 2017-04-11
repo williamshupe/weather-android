@@ -113,7 +113,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
     @Override
     public boolean onQueryTextSubmit(String query) {
-        Log.d("query", query);
+        mAdapter.setLoading(true);
         getForecast(query);
         MenuItemCompat.collapseActionView(mSearchMenuItem);
         getSupportActionBar().setTitle(query);
@@ -122,7 +122,6 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
     @Override
     public boolean onQueryTextChange(String newText) {
-        Log.d("query change", newText);
         return false;
     }
 

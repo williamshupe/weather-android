@@ -37,6 +37,7 @@ public class ForecastRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
                 viewHolder = new ForecastDayViewHolder(inflater.inflate(R.layout.view_holder_forecast_day, parent, false));
                 break;
             case LOADING_TYPE:
+                viewHolder = new LoadingViewHolder(inflater.inflate(R.layout.view_holder_loading, parent, false));
                 break;
             case TODAY_TYPE:
                 viewHolder = new TodayViewHolder(inflater.inflate(R.layout.view_holder_today, parent, false));
@@ -48,16 +49,23 @@ public class ForecastRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        if (position == 0) {
-            ((TodayViewHolder) holder).onBindViewHolder(mForecast.getForecast().get(0), mListener);
-        } else {
-            ((ForecastDayViewHolder) holder).onBindViewHolder(mForecast.getForecast().get(position));
+        switch (getItemViewType(position)) {
+            case FORECAST_DAY_TYPE:
+                ((ForecastDayViewHolder) holder).onBindViewHolder(mForecast.getForecast().get(position));
+                break;
+            case LOADING_TYPE:
+                break;
+            case TODAY_TYPE:
+                ((TodayViewHolder) holder).onBindViewHolder(mForecast.getForecast().get(0), mListener);
+                break;
         }
     }
 
     @Override
     public int getItemCount() {
-        if (mForecast != null && mForecast.getForecast() != null) {
+        if (mIsLoading) {
+            return 1;
+        } else if (mForecast != null && mForecast.getForecast() != null) {
             return mForecast.getForecast().size();
         } else {
             return 0;
@@ -66,10 +74,14 @@ public class ForecastRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
 
     @Override
     public @ForecastViewType int getItemViewType(int position) {
-        if (position == 0) {
-            return TODAY_TYPE;
+        if (mIsLoading) {
+            return LOADING_TYPE;
         } else {
-            return FORECAST_DAY_TYPE;
+            if (position == 0) {
+                return TODAY_TYPE;
+            } else {
+                return FORECAST_DAY_TYPE;
+            }
         }
     }
 
