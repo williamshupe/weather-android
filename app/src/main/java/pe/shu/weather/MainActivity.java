@@ -22,11 +22,15 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MainActivity extends AppCompatActivity implements SearchView.OnQueryTextListener, TodayViewHolder.OnTodayClickedListener, FragmentManager.OnBackStackChangedListener {
+public class MainActivity extends AppCompatActivity implements SearchView.OnQueryTextListener,
+        TodayViewHolder.OnTodayClickedListener, FragmentManager.OnBackStackChangedListener,
+        ErrorViewHolder.OnRetryClickedListener {
 
     private ForecastRecyclerAdapter mAdapter;
 
     private MenuItem mSearchMenuItem;
+
+    private String mLastQuery;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,8 +43,8 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         RecyclerView forecastRecycler = (RecyclerView)findViewById(R.id.forecast_recycler);
 
         mAdapter = new ForecastRecyclerAdapter();
-        mAdapter.setLoading(true);
-        mAdapter.setListener(this);
+        mAdapter.setTodayClickedListener(this);
+        mAdapter.setRetryClickedListener(this);
         forecastRecycler.setAdapter(mAdapter);
         forecastRecycler.setLayoutManager(new LinearLayoutManager(MainActivity.this));
         forecastRecycler.addItemDecoration(new DividerItemDecoration(MainActivity.this, LinearLayoutManager.VERTICAL));
@@ -48,7 +52,6 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         Forecast forecast = ForecastService.getInstance().getForecast();
         if (forecast != null) {
             mAdapter.setForecast(forecast);
-            mAdapter.setLoading(false);
             getSupportActionBar().setTitle(String.format(getString(R.string.location_title), forecast.getLocation().getCity(), forecast.getLocation().getRegion()));
         } else {
             getForecast("South Jordan");
@@ -97,6 +100,8 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     }
 
     private void getForecast(String location) {
+        mAdapter.setLoading(true);
+        mLastQuery = location;
         YahooWeatherService apiService = RestClient.getApiService();
         String yqlQuery = String.format("select * from weather.forecast where woeid in (select woeid from geo.places(1) where text=\"%s\")", location);
         Call<Forecast> forecastCall = apiService.forecast(yqlQuery);
@@ -113,6 +118,10 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
             @Override
             public void onFailure(Call<Forecast> call, Throwable t) {
+                getSupportActionBar().setTitle("Weather");
+                mAdapter.setForecast(null);
+                mAdapter.setLoading(false);
+                ForecastService.getInstance().setForecast(null);
                 Log.e("Weather app", "Failed to get forecast", t);
             }
         });
@@ -140,5 +149,10 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         fragmentTransaction.add(R.id.main_content, ForecastDetailFragment.newInstance());
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
+    }
+
+    @Override
+    public void onRetryClicked() {
+        getForecast(mLastQuery);
     }
 }
