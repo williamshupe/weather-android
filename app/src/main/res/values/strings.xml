@@ -3,4 +3,9 @@
     <string name="temperature">%d°</string>
     <string name="action_search">Search</string>
     <string name="location_title">%1$s, %2$s</string>
+    <string name="today">Today</string>
+    <string name="high">High %d°</string>
+    <string name="low">Low %d°</string>
+    <string name="current_temp">%1$d°%2$s</string>
+    <string name="feels_like">Feels like %d°</string>
 </resources>

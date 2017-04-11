@@ -1,5 +1,7 @@
 package pe.shu.weather;
 
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -12,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import pe.shu.weather.model.Forecast;
+import pe.shu.weather.model.ForecastService;
 import pe.shu.weather.model.forecast.Location;
 import pe.shu.weather.rest.RestClient;
 import pe.shu.weather.rest.YahooWeatherService;
@@ -19,7 +22,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MainActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
+public class MainActivity extends AppCompatActivity implements SearchView.OnQueryTextListener, TodayViewHolder.OnTodayClickedListener, FragmentManager.OnBackStackChangedListener {
 
     private ForecastRecyclerAdapter mAdapter;
 
@@ -30,10 +33,14 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        getSupportFragmentManager().addOnBackStackChangedListener(this);
+        displayHomeUp();
+
         RecyclerView forecastRecycler = (RecyclerView)findViewById(R.id.forecast_recycler);
 
         mAdapter = new ForecastRecyclerAdapter();
         mAdapter.setLoading(true);
+        mAdapter.setListener(this);
         forecastRecycler.setAdapter(mAdapter);
         forecastRecycler.setLayoutManager(new LinearLayoutManager(MainActivity.this));
         forecastRecycler.addItemDecoration(new DividerItemDecoration(MainActivity.this, LinearLayoutManager.VERTICAL));
@@ -49,7 +56,37 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         final SearchView searchView = (SearchView) MenuItemCompat.getActionView(mSearchMenuItem);
         searchView.setOnQueryTextListener(this);
 
+        mSearchMenuItem.setVisible(!shouldDisplayUp());
+
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                FragmentManager fm = getSupportFragmentManager();
+                if (fm.getBackStackEntryCount() > 0) {
+                    fm.popBackStack();
+                }
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackStackChanged() {
+        displayHomeUp();
+    }
+
+    private boolean shouldDisplayUp() {
+        return getSupportFragmentManager().getBackStackEntryCount() > 0;
+    }
+
+    public void displayHomeUp() {
+        boolean showUp = shouldDisplayUp();
+        getSupportActionBar().setDisplayHomeAsUpEnabled(showUp);
+        invalidateOptionsMenu();
     }
 
     private void getForecast(String location) {
@@ -60,6 +97,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             @Override
             public void onResponse(Call<Forecast> call, Response<Forecast> response) {
                 Forecast forecast = response.body();
+                ForecastService.getInstance().setForecast(forecast);
                 Location forecastLocation = forecast.getLocation();
                 getSupportActionBar().setTitle(String.format(getString(R.string.location_title), forecastLocation.getCity(), forecastLocation.getRegion()));
                 mAdapter.setForecast(forecast);
@@ -86,5 +124,15 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     public boolean onQueryTextChange(String newText) {
         Log.d("query change", newText);
         return false;
+    }
+
+    @Override
+    public void onTodayClicked() {
+        MenuItemCompat.collapseActionView(mSearchMenuItem);
+        FragmentManager fm = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fm.beginTransaction();
+        fragmentTransaction.add(R.id.main_content, ForecastDetailFragment.newInstance());
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
     }
 }

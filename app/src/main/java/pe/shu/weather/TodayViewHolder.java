@@ -9,12 +9,11 @@ import pe.shu.weather.model.WeatherIcon;
 import pe.shu.weather.model.forecast.ForecastDay;
 
 /**
- * Created by William on 4/10/2017.
+ * Created by William on 4/11/2017.
  */
 
-public class ForecastDayViewHolder extends RecyclerView.ViewHolder {
+public class TodayViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-    private TextView mDateTextView;
     private TextView mConditionTextView;
     private TextView mHighTextView;
     private TextView mLowTextView;
@@ -23,10 +22,11 @@ public class ForecastDayViewHolder extends RecyclerView.ViewHolder {
 
     private String mTempFormatString;
 
-    public ForecastDayViewHolder(View itemView) {
+    private OnTodayClickedListener mListener;
+
+    public TodayViewHolder(View itemView) {
         super(itemView);
 
-        mDateTextView = (TextView)itemView.findViewById(R.id.forecast_day_date);
         mConditionTextView = (TextView)itemView.findViewById(R.id.forecast_day_condition);
         mHighTextView = (TextView)itemView.findViewById(R.id.forecast_day_high);
         mLowTextView = (TextView)itemView.findViewById(R.id.forecast_day_low);
@@ -34,14 +34,32 @@ public class ForecastDayViewHolder extends RecyclerView.ViewHolder {
         mWeatherImage = (ImageView)itemView.findViewById(R.id.weather_image);
 
         mTempFormatString = itemView.getContext().getString(R.string.temperature);
+
+        itemView.setOnClickListener(this);
     }
 
-    public void onBindViewHolder(ForecastDay forecastDay) {
-        mDateTextView.setText(forecastDay.getDate().toString("EEEE, MMM d"));
+    public void onBindViewHolder(ForecastDay forecastDay, OnTodayClickedListener listener) {
         mConditionTextView.setText(forecastDay.getCondition());
         mHighTextView.setText(String.format(mTempFormatString, forecastDay.getHigh()));
         mLowTextView.setText(String.format(mTempFormatString, forecastDay.getLow()));
 
         mWeatherImage.setImageResource(WeatherIcon.getIconFromCode(forecastDay.getCode()));
+
+        mListener = listener;
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.forecast_day_container:
+                if (mListener != null) {
+                    mListener.onTodayClicked();
+                }
+                break;
+        }
+    }
+
+    public interface OnTodayClickedListener {
+        void onTodayClicked();
     }
 }
