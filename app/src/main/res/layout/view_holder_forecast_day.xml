@@ -12,17 +12,17 @@
         android:id="@+id/forecast_day_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginLeft="@dimen/view_margin"
+        android:layout_marginTop="@dimen/view_margin"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginStart="16dp"/>
+        android:layout_marginStart="@dimen/view_margin"/>
     <TextView
         android:id="@+id/forecast_day_condition"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginTop="@dimen/view_half_margin"
+        android:layout_marginBottom="@dimen/view_margin"
         app:layout_constraintTop_toBottomOf="@+id/forecast_day_date"
         app:layout_constraintLeft_toLeftOf="@+id/forecast_day_date"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -31,16 +31,16 @@
         android:id="@+id/forecast_day_high"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginRight="16dp"
+        android:layout_marginRight="@dimen/view_margin"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="@+id/forecast_day_date"
-        android:layout_marginEnd="16dp"/>
+        android:layout_marginEnd="@dimen/view_margin"/>
     <TextView
         android:id="@+id/forecast_day_low"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintLeft_toLeftOf="@+id/forecast_day_high"
-        android:layout_marginTop="7dp"
+        android:layout_marginTop="@dimen/view_half_margin"
         app:layout_constraintTop_toBottomOf="@+id/forecast_day_high"/>
 
     <ImageView
@@ -51,9 +51,9 @@
         android:src="@drawable/clear"
         app:layout_constraintDimensionRatio="w,1:1"
         app:layout_constraintRight_toLeftOf="@+id/forecast_day_high"
-        android:layout_marginRight="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginRight="@dimen/view_half_margin"
+        android:layout_marginTop="@dimen/view_half_margin"
+        android:layout_marginBottom="@dimen/view_half_margin"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         />
