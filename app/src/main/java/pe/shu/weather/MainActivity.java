@@ -15,6 +15,7 @@ import android.view.MenuItem;
 
 import pe.shu.weather.model.Forecast;
 import pe.shu.weather.model.ForecastService;
+import pe.shu.weather.model.forecast.ForecastDay;
 import pe.shu.weather.model.forecast.Location;
 import pe.shu.weather.rest.RestClient;
 import pe.shu.weather.rest.YahooWeatherService;
@@ -24,7 +25,7 @@ import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity implements SearchView.OnQueryTextListener,
         TodayViewHolder.OnTodayClickedListener, FragmentManager.OnBackStackChangedListener,
-        ErrorViewHolder.OnRetryClickedListener {
+        ErrorViewHolder.OnRetryClickedListener, ForecastDayViewHolder.OnForecastDayClickedListener {
 
     private ForecastRecyclerAdapter mAdapter;
 
@@ -45,6 +46,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         mAdapter = new ForecastRecyclerAdapter();
         mAdapter.setTodayClickedListener(this);
         mAdapter.setRetryClickedListener(this);
+        mAdapter.setForecastDayClickedListener(this);
         forecastRecycler.setAdapter(mAdapter);
         forecastRecycler.setLayoutManager(new LinearLayoutManager(MainActivity.this));
         forecastRecycler.addItemDecoration(new DividerItemDecoration(MainActivity.this, LinearLayoutManager.VERTICAL));
@@ -154,5 +156,18 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     @Override
     public void onRetryClicked() {
         getForecast(mLastQuery);
+    }
+
+    @Override
+    public void onForecastDayClicked(int position) {
+        ForecastDay forecastDay = ForecastService.getInstance().getForecast().getForecast().get(position);
+        MenuItemCompat.collapseActionView(mSearchMenuItem);
+        FragmentManager fm = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fm.beginTransaction();
+        fragmentTransaction.add(R.id.main_content, ForecastDayDetailFragment.newInstance(
+                forecastDay.getDate(), forecastDay.getCode(), forecastDay.getHigh(), forecastDay.getLow(), forecastDay.getCondition()
+        ));
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
     }
 }

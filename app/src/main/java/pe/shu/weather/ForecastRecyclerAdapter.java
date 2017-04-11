@@ -28,6 +28,7 @@ public class ForecastRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
     private Forecast mForecast;
     private TodayViewHolder.OnTodayClickedListener mTodayClickedListener;
     private ErrorViewHolder.OnRetryClickedListener mRetryClickedListener;
+    private ForecastDayViewHolder.OnForecastDayClickedListener mForecastDayClickedListener;
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, @ForecastViewType int viewType) {
@@ -56,7 +57,7 @@ public class ForecastRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         switch (getItemViewType(position)) {
             case FORECAST_DAY_TYPE:
-                ((ForecastDayViewHolder) holder).onBindViewHolder(mForecast.getForecast().get(position));
+                ((ForecastDayViewHolder) holder).onBindViewHolder(mForecast.getForecast().get(position), mForecastDayClickedListener);
                 break;
             case LOADING_TYPE:
                 break;
@@ -109,5 +110,12 @@ public class ForecastRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
     public void setRetryClickedListener(ErrorViewHolder.OnRetryClickedListener retryClickedListener) {
         mRetryClickedListener = retryClickedListener;
         notifyItemChanged(0);
+    }
+
+    public void setForecastDayClickedListener(ForecastDayViewHolder.OnForecastDayClickedListener forecastDayClickedListener) {
+        mForecastDayClickedListener = forecastDayClickedListener;
+        if (!mIsLoading && mForecast != null) {
+            notifyItemRangeChanged(1, mForecast.getForecast().size() -1);
+        }
     }
 }
