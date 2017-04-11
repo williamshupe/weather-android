@@ -36,7 +36,7 @@
         android:id="@+id/forecast_day_detail_high"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="@dimen/text_large"
+        android:textSize="@dimen/text_medium"
         android:layout_marginEnd="@dimen/view_margin"
         android:layout_marginStart="@dimen/view_margin"
         android:layout_marginBottom="@dimen/view_half_margin"
@@ -48,13 +48,13 @@
         android:id="@+id/forecast_day_detail_low"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="@dimen/text_large"
+        android:textSize="@dimen/text_medium"
         android:layout_marginTop="@dimen/view_half_margin"
         app:layout_constraintLeft_toLeftOf="@+id/forecast_day_detail_high"
         app:layout_constraintTop_toBottomOf="@+id/forecast_day_detail_high"
         android:layout_marginLeft="0dp"
         app:layout_constraintBottom_toBottomOf="@+id/forecast_day_detail_condition"
-        android:layout_marginBottom="@dimen/view_half_margin"/>
+        android:layout_marginBottom="0dp"/>
 
     <android.support.constraint.Guideline
         android:layout_width="wrap_content"
