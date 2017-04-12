@@ -64,10 +64,12 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_menu, menu);
 
+        // Add search bar
         mSearchMenuItem = menu.findItem(R.id.action_search);
         final SearchView searchView = (SearchView) MenuItemCompat.getActionView(mSearchMenuItem);
         searchView.setOnQueryTextListener(this);
 
+        // Hide search bar if we aren't on the main page
         mSearchMenuItem.setVisible(!shouldDisplayUp());
 
         return true;
@@ -91,16 +93,41 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         displayHomeUp();
     }
 
+    /**
+     * @return if the Android Up Navigation button should be displayed.
+     */
     private boolean shouldDisplayUp() {
         return getSupportFragmentManager().getBackStackEntryCount() > 0;
     }
 
+    /**
+     * Displays or hides the Android Up Navigation button
+     */
     public void displayHomeUp() {
         boolean showUp = shouldDisplayUp();
         getSupportActionBar().setDisplayHomeAsUpEnabled(showUp);
         invalidateOptionsMenu();
     }
 
+    /**
+     * Sets the title of the ActionBar.
+     * @param title The title to display in the action bar
+     */
+    private void setTitle(String title) {
+        getSupportActionBar().setTitle(title);
+    }
+
+    /**
+     * Hides the search bar in the ActionBar
+     */
+    private void hideSearchBar() {
+        MenuItemCompat.collapseActionView(mSearchMenuItem);
+    }
+
+    /**
+     * Makes a request to Yahoo's servers for weather data.
+     * @param location The location for weather data
+     */
     private void getForecast(String location) {
         mAdapter.setLoading(true);
         mLastQuery = location;
@@ -113,14 +140,14 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                 Forecast forecast = response.body();
                 ForecastService.getInstance().setForecast(forecast);
                 Location forecastLocation = forecast.getLocation();
-                getSupportActionBar().setTitle(String.format(getString(R.string.location_title), forecastLocation.getCity(), forecastLocation.getRegion()));
+                setTitle(String.format(getString(R.string.location_title), forecastLocation.getCity(), forecastLocation.getRegion()));
                 mAdapter.setForecast(forecast);
                 mAdapter.setLoading(false);
             }
 
             @Override
             public void onFailure(Call<Forecast> call, Throwable t) {
-                getSupportActionBar().setTitle("Weather");
+                setTitle("Weather");
                 mAdapter.setForecast(null);
                 mAdapter.setLoading(false);
                 ForecastService.getInstance().setForecast(null);
@@ -133,8 +160,8 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     public boolean onQueryTextSubmit(String query) {
         mAdapter.setLoading(true);
         getForecast(query);
-        MenuItemCompat.collapseActionView(mSearchMenuItem);
-        getSupportActionBar().setTitle(query);
+        hideSearchBar();
+        setTitle(query);
         return true;
     }
 
@@ -145,7 +172,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
     @Override
     public void onTodayClicked() {
-        MenuItemCompat.collapseActionView(mSearchMenuItem);
+        hideSearchBar();
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fm.beginTransaction();
         fragmentTransaction.add(R.id.main_content, ForecastDetailFragment.newInstance());
@@ -161,7 +188,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     @Override
     public void onForecastDayClicked(int position) {
         ForecastDay forecastDay = ForecastService.getInstance().getForecast().getForecast().get(position);
-        MenuItemCompat.collapseActionView(mSearchMenuItem);
+        hideSearchBar();
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fm.beginTransaction();
         fragmentTransaction.add(R.id.main_content, ForecastDayDetailFragment.newInstance(
