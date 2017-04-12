@@ -149,6 +149,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/view_half_margin"
             android:layout_marginLeft="0dp"
+            android:text="@string/wind"
             app:layout_constraintBottom_toTopOf="@+id/forecast_detail_wind"
             app:layout_constraintLeft_toLeftOf="@+id/forecast_detail_wind"/>
 
